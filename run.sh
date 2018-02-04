@@ -67,7 +67,14 @@ if [[ -n "${PUBLIC_HOST_ADDR}" && -n "${PUBLIC_HOST_PORT}" ]]; then
     echo "====REMOTE FINGERPRINT===="
 
     echo "=> Setting up the reverse ssh tunnel"
-    sshpass -p ${ROOT_PASS} autossh -M 0 -NgR 1080:localhost:${PROXY_PORT} root@${PUBLIC_HOST_ADDR} -p ${PUBLIC_HOST_PORT}
+    while true
+    do
+        sshpass -p ${ROOT_PASS} autossh -M 0 -o StrictHostKeyChecking=no -NgR 1080:localhost:${PROXY_PORT} root@${PUBLIC_HOST_ADDR} -p ${PUBLIC_HOST_PORT}
+        echo "=> Tunnel Link down!"
+        echo "=> Wait 15 seconds to reconnect"
+        sleep 15
+        echo "=> Reconnecting..."
+    done
 else
     echo "=> Running in public host mode"
     if [ ! -f /.root_pw_set ]; then
