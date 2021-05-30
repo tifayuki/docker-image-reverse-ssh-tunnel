@@ -54,7 +54,6 @@ On public host, run:
 ```
   docker run -d \
     -e ROOT_PASS=<your_password> \
-    -e AUTHORIZED_KEYS=<NATed Host id_rsa.pub content> \
     -p <your_sshd_port>:22 \
     -p <forwarding_port>:1080 \
     -v <authorized_keys file path>:/root/.ssh/authorized_keys
