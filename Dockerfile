@@ -16,7 +16,6 @@ RUN apt-get update && \
 ADD run.sh /run.sh
 RUN chmod +x /*.sh
 
-ENV AUTHORIZED_KEYS **None**
 ENV ROOT_PASS **None**
 ENV PUBLIC_HOST_ADDR **None**
 ENV PUBLIC_HOST_PORT **None**

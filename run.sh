@@ -69,7 +69,11 @@ if [[ -n "${PUBLIC_HOST_ADDR}" && -n "${PUBLIC_HOST_PORT}" ]]; then
     echo "=> Setting up the reverse ssh tunnel"
     while true
     do
-        sshpass -p ${ROOT_PASS} autossh -M 0 -o StrictHostKeyChecking=no -NgR 1080:localhost:${PROXY_PORT} root@${PUBLIC_HOST_ADDR} -p ${PUBLIC_HOST_PORT} -o TCPKeepAlive=yes -o ServerAliveInterval=30
+        if [ -z "${ROOT_PASS}" ]; then
+            ssh -o StrictHostKeyChecking=no -NgR 1080:localhost:${PROXY_PORT} root@${PUBLIC_HOST_ADDR} -p ${PUBLIC_HOST_PORT} -o TCPKeepAlive=yes -o ServerAliveInterval=30
+        else
+            sshpass -p ${ROOT_PASS} ssh -o StrictHostKeyChecking=no -NgR 1080:localhost:${PROXY_PORT} root@${PUBLIC_HOST_ADDR} -p ${PUBLIC_HOST_PORT} -o TCPKeepAlive=yes -o ServerAliveInterval=30
+        fi
         echo "=> Tunnel Link down!"
         echo "=> Wait 15 seconds to reconnect"
         sleep 15
@@ -80,5 +84,7 @@ else
     if [ ! -f /.root_pw_set ]; then
 	    SetRootPass
     fi
-    exec /usr/sbin/sshd -D
+    mkdir -p /root/.ssh/
+    exec /usr/sbin/sshd -D -o AuthorizedKeysFile=/root/.ssh/authorized_keys
 fi
+
